@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Traffic Ligths</title>
+    <link href="traffic-ligths.gif" rel="shortcut icon" type="image/gif" />
+    <style type="text/css">
+        body{background-color:#eee;font-size:16px;direction:rtl;font-family: Arial, Helvetica, sans-serif;}
+        table {border-collapse:collapse}
+        td{vertical-align:top}
+        h1{font-size:20px}
+        h2{font-size:18px;margin-top:25px;margin-bottom:0}
+        th{background-color:#ccc}
+        .light-red, .light-yellow, .light-green{width:18px;height:18px;border-radius:20px}
+
+        .light-red{background-color:red}
+        .light-yellow{background-color:#FFFF00}
+        .light-green{background-color:#1FEA00}
+        
+        .table td, .table th{border: solid 1px #dedede;padding:10px}
+        .table .row0 td{background-color:#f6f6f6}
+        .table .row1 td{background-color:#eee}
+        
+        .text-zone{height:600px;overflow-y:scroll;padding:0 10px 0 10px}
+        
+        .lang{cursor:pointer;padding-left:40px;background-repeat:no-repeat;margin-bottom:10px}
+        .lang:hover{text-decoration:underline}
+        .lang-rus{background-image:url(flag_russia.png)}
+        .lang-heb{background-image:url(flag_israel.png)}
+        
+    </style>
+    <script type="text/javascript">
+        function setLang(show, hide) {
+            document.getElementById(show).style.display = '';
+            document.getElementById(hide).style.display = 'none';
+
+            if (show == "heb")
+                document.body.style.direction = "rtl";
+            else
+                document.body.style.direction = "ltr";
+        }
+    </script>
+</head>
+<body>
+<table>
+    <tr>
+        <td style="width:150px;text-align:center"><img src="traffic-ligths.gif" alt="Traffic Ligths" /></td>
+        <td style="max-width:900px">
+            <div id="rus" class="text-zone" style="display:none">
+                <h1>Задание: Разработка программы, имитирующей работу светофора</h1>
+            
+                <h2>Технологии и языки программирования</h2>
+                <p>
+                    ASP.NET, C#, HTML, JavaScript, CSS3, JSON, JQuery
+                </p>
+
+                <h2>Описание</h2>
+                <p>
+                    Приложение имитирует работу дорожного светофора. Оно выполнено в виде ASPX страницы.<br />
+                    При запуске страницы в браузере, приложение отображает красный свет, затем красный вместе с желтым, затем зеленый, желтый.
+                    Далее заданная последовательность повторяется снова.
+                </p>
+                <p>
+                    Последовательность отображения цветов показана в анимации, а также описана ниже.
+                </p>
+
+                <h2>Дизайн</h2>
+                <p>
+                    Внешний вид светофора показан на анимации. При разработке необходимо придерживаться дизайна, описанного в таблице ниже и представленного на картинке в виде анимации.
+                    Дизайн должен быть разработан с применением HTML и CSS, без использования графики.
+                </p>
+                <table class="table">
+                    <tr><td>Ширина светофора:</td><td>100 пикселов</td></tr>
+                    <tr><td>Высота светофора:</td><td>Автоматически</td></tr>
+                    <tr><td>Цвет фона:</td><td>#888</td></tr>
+                    <tr><td>Цвет рамки:</td><td>#666</td></tr>
+                    <tr><td>Ширина рамки:</td><td>2 пиксела</td></tr>
+                </table>
+                <p>
+                    Ниже представлены коды цветов и размеры сигналов светофора:
+                </p>
+                <table class="table">
+                    <tr><td><div class="light-red"></div></td><td>Красный:</td><td>#FF0000</td><td>Диаметр 80 пикселов</td></tr>
+                    <tr><td><div class="light-yellow"></div></td><td>Желтый:</td><td>#FFFF00</td><td>Диаметр 80 пикселов</td></tr>
+                    <tr><td><div class="light-green"></div></td><td>Зеленый:</td><td>#1FEA00</td><td>Диаметр 80 пикселов</td></tr>
+                </table>
+                <h2>Техническое описание</h2>
+                <p>
+                    <img src="project.png" alt="Traffic Ligths" style="float:left;margin-right:15px" />
+                    Логика выбора следующего цвета должна быть выполнена на сервере. Для этой цели создается HttpHandler lights.ashx.
+                    При загрузке страницы приложение посылает AJAX запрос к серверу (HttpHandler: lights.ashx) без параметров. Запрос выполняется с помощью библиотеки JQuery. 
+                </p>
+                <p>  
+                    Сервер принимает запрос и возвращает код цвета по-умолчанию (красный) и время, которое сигнал будет активен (3 секунды).<br />
+                </p>
+                <p>
+                    Приложение включает сигнал, согласно полученному коду, на время, полученное с сервера.
+                    По прошествии заданного времени, приложение снова обращается к серверу и передает ему код текущего цвета. Сервер возвращает код следующего цвета и время его отображения в формате JSON.<br /> 
+                    Время отображения красного и зеленого цветов - 3 секунды, время отображения желтого и красного с желтым 1.5 секунды.
+                </p>
+                <p>
+                    Код цвета должен передаваться с помощью метода POST в параметре с именем color. При получении кода ответа с сервера, приложение на стороне клиента включает нужный сигнал светофора, согласно алгоритму описанному ниже:
+                </p>
+     
+                <table class="table" style="font-size:14px;width:100%">
+                    <tr><th colspan="2">Текущий цвет - Запрос к серверу</th><th colspan="2">Новый цвет - Ответ сервера</th><th>Формат ответа JSON</th></tr>
+                    <tr class="row0"><td></td><td>Отсутствует</td><td>Красный - 3 сек</td><td><div class="light-red"></div></td><td>{"color":"red","time":"3"}</td></tr>
+                    <tr class="row1"><td><div class="light-red"></div></td><td>Красный</td><td>Красный и желтый - 1.5 сек.</td><td><div class="light-red"></div><div class="light-yellow"></div></td><td>{"color":"red,yellow","time":"1.5"}</tr>
+                    <tr class="row0"><td><div class="light-red"></div><div class="light-yellow"></div></td><td>Красный и желтый</td><td>Зеленый - 3 сек.</td><td><div class="light-green"></div></td><td>{"color":"green","time":"3"}</tr>
+                    <tr class="row1"><td><div class="light-green"></div></td><td>Зеленый</td><td>Желтый - 1.5 сек.</td><td><div class="light-yellow"></div></td><td>{"color":"yellow","time":"1.5"}</tr>
+                    <tr class="row0"><td><div class="light-yellow"></div></td><td>Желтый</td><td>Красный - 3 сек.</td><td><div class="light-red"></div></td><td>{"color":"red","time":"3"}</tr>
+                </table>
+                <p>
+                    Весь алгоритм повторяется по кругу.
+                </p>
+                <p>
+                    <b>Время выполнения задания: 2 часа.<br />
+                    Удачи!</b>
+                </p>
+            </div>
+            <div id="heb" class="text-zone">
+                <h1>משימה: פיתוח אפליקציה ליישום סימולציית רמזור</h1>
+                <h2>טכנולוגיות ושפות תוכנה</h2>
+                ASP.NET MVC or .NET Core, C#, HTML, JavaScript, CSS3, JSON, JQuery
+                <h2>תיאור כללי</h2>
+                <p>
+                יש לפתח אפליקציה המדמה את עבודת הרמזור. האפליקציה מכילה דף אחד בלבד. 
+יש להשתמש ב-C# לצורך כתיבת קוד צד שרת ובאחת מהטכנולוגיות הבאות לבחירתך בצד הקליינט: ASP.NET, Angular, React, JavaScript
+</p>
+<p>
+
+
+בהפעלת הדף האפליקציה תציג צבע אדום, אחר כך אדום וצהוב ביחד, אחרי זה ירוק ובסוף צהוב. 
+בסוף הסדרה, הצבעים חוזרים על עצמם בלולאה אין סופית לפי הסדר הפורט, כמו שמופיע באנימציה.
+</p>
+<p>
+זמן הצגה: אדום או ירוק - 3 שניות, צהוב או אדום + צהוב - 1.5 שניות.            
+</p>            
+
+                <h2>עיצוב</h2>
+                <p>
+                    עיצוב כללי של הרמזור ניתן לראות בתמונה.
+                    יש לעצב את הרמזור באמצעות HTML ו-CSS ללא שימוש בתמונות.
+                    יש לפתח את הרמזור בהתאם לדוגמה ולעמוד בדרישות המפורטות בטבלאות להלן:
+                </p>
+                <table class="table">
+                    <tr><td>רוחב רמזור:</td><td>100 פיקסל</td></tr>
+                    <tr><td>גובה רמזור:</td><td>אוטומטי</td></tr>
+                    <tr><td>צבע רקע:</td><td>#888</td></tr>
+                    <tr><td>צבע מסגרת:</td><td>#666</td></tr>
+                    <tr><td>רוחב מסגרת:</td><td>2 פיקסל</td></tr>
+                </table>
+                <br/>
+                טבלת הגדרת צבעים וגדלים של פנסים:
+              
+                <table class="table">
+                    <tr><td><div class="light-red"></div></td><td>אדום:</td><td>#FF0000</td><td>קוטר 80 פיקסל</td></tr>
+                    <tr><td><div class="light-yellow"></div></td><td>צהוב:</td><td>#FFFF00</td><td>קוטר 80 פיקסל</td></tr>
+                    <tr><td><div class="light-green"></div></td><td>ירוק:</td><td>#1FEA00</td><td>קוטר 80 פיקסל</td></tr>
+                </table>
+                <h2>אפיון טכני</h2>
+                <p>  
+                אפליקציה מדליקה את פנסי הרמזור באופן מחזורי בהתאם לקוד צבע וזמן הפעלה שהתקבלו משרת.
+                הפעלה מחזורית תבוצע לפי זמן שמוקצה להפעלת הפנס.
+                פניה הבאה לשרת תבוצע בתום הזמן של המחזור הנוכחי.
+                </p>
+             
+                <!--img src="project.png" alt="Traffic Ligths" style="float:right;margin-left:35px" /-->
+                <!--
+                <p>מבנה קבצי הפרויקט ע"פ מופיע בתמונה.</p>
+                        
+                -->       
+                    <ul>
+                        <li>דף ראשי אמור להכיל HTML, Javascript ו-CSS הנדרשים לעבודת האפליקציה בצד הדפדפן </li>
+                        <li>
+                            Rest API בשם <b>lights/</b> מכיל לוגיקה של בחירת צבע בצד שרת.
+                        </li>
+                    </ul>
+  
+                <p>
+                בפניה ראשונה אפליקציה אמורה לפנות לשרת (lights.ashx) ללא פרמטרים בעזרת AJAX 
+                השרת מחזיר צבע ברירת מחדל (אדום) וזמן (3 שניות) שהצבע יהיה דלוק.
+                יש לבצע את הפניה באמצעות JQuery.
+                     
+                </p>
+                
+                <p>
+               בפניות הבאות אפליקציה שולחת לשרת קוד צבע נוכחי ומקבלת קוד צבע הבא וזמן הפעלה שלו.
+                קוד צבע נוכחי אמור לעבור לשרת בעזרת POST בתור פרמטר color.
+                
+                </p><br />
+     התנהגות רמזור - טבלאת מצבים
+                <table class="table" style="font-size:14px;width:100%">
+                    <tr><th colspan="2">צבע נוכחי - פניה לשרת</th><th colspan="2">צבע חדש + זמן הפעלה - תשובת שרת</th><th>פורמט תשובה JSON</th></tr>
+                    <tr class="row0"><td></td><td>אין</td><td>אדום - 3 שניות</td><td><div class="light-red"></div></td><td>{"color":"red","time":"3"}</td></tr>
+                    <tr class="row1"><td><div class="light-red"></div></td><td>אדום</td><td>אדום + צהוב - 1.5 שניות.</td><td><div class="light-red"></div><div class="light-yellow"></div></td><td>{"color":"red,yellow","time":"1.5"}</tr>
+                    <tr class="row0"><td><div class="light-red"></div><div class="light-yellow"></div></td><td>אדום + צהוב</td><td>ירוק - 3 שניות.</td><td><div class="light-green"></div></td><td>{"color":"green","time":"3"}</tr>
+                    <tr class="row1"><td><div class="light-green"></div></td><td>ירוק</td><td>צהוב - 1.5 שניות.</td><td><div class="light-yellow"></div></td><td>{"color":"yellow","time":"1.5"}</tr>
+                    <tr class="row0"><td><div class="light-yellow"></div></td><td>צהוב</td><td>אדום - 3 שניות.</td><td><div class="light-red"></div></td><td>{"color":"red","time":"3"}</tr>
+                </table>
+                <p>
+                    <!--<b>זמן לביצוע משימה: 2 שעות.<br />-->
+                    בהצלחה!</b>
+                </p>
+            </div>
+            </div>
+        </td>
+        <td style="padding:10px">
+            <div class="lang lang-heb" onclick="setLang('heb', 'rus')">עברית</div>
+            <div class="lang lang-rus" onclick="setLang('rus', 'heb')">Русский</div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
